@@ -36,8 +36,28 @@ missing or incomplete. All fields below are **Web verified / Direct evidence**
   Systems" — whether it was actually accepted/published there has not been
   checked.
 
+## External Literature (Phase 2)
+
+Phase 2 (external literature research, completed 2026-09-06) analyzed **~104
+external papers** across five research-family groups, adversarially
+stress-testing six Phase-1-derived hypotheses (see
+`../evidence/claims.md` for verdicts). Full bibliographic and technical
+detail lives in:
+
+- `../external_literature/00_inventory.md` — structured comparison table
+  (one row per paper, same dimensions as the supplied-paper analyses)
+- `../external_literature/group_a_adaptive_resolution_hierarchical.md`
+- `../external_literature/group_b_attention_uncertainty_realtime.md`
+- `../external_literature/group_c_25d_semantic_terrain.md`
+- `../external_literature/group_d_dynamic_temporal_perception.md`
+- `../external_literature/group_e_sparse_representations.md`
+
+Not duplicated here to avoid maintaining two copies of ~104 citations; this
+file remains the authoritative bibliography for the 9 **supplied** papers.
+
 ## Format for future entries
 
-As external literature is added (Phase 2 of `01_research_plan.md`), append
-rows here in the same table format, and tag each with the evidence level
-(Direct / Web verified) used to obtain the metadata.
+As further external literature is added in later phases, append rows to
+`../external_literature/00_inventory.md` in the same table format, and tag
+each with the evidence level (Direct / Web verified / Derived / Inference)
+used to obtain the metadata.
