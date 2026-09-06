@@ -1,0 +1,87 @@
+{
+  "policies": {
+    "A": {
+      "overall": {
+        "elevation_mae": 0.0065,
+        "n_elev_samples": 4297,
+        "allocation_correct_rate": 0.5191
+      },
+      "critical_region": {
+        "elevation_mae": 0.0042,
+        "n_elev_samples": 68,
+        "allocation_correct_rate": 0.0
+      },
+      "anomaly_region": {
+        "elevation_mae": 0.0098,
+        "n_elev_samples": 100,
+        "allocation_correct_rate": 0.0
+      },
+      "object": {
+        "detected": true,
+        "occ_cell_count": 2
+      },
+      "overhead": {
+        "build_ms": 12.55,
+        "cell_count": 1534
+      }
+    },
+    "B": {
+      "overall": {
+        "elevation_mae": 0.0066,
+        "n_elev_samples": 4314,
+        "allocation_correct_rate": 0.5365
+      },
+      "critical_region": {
+        "elevation_mae": 0.0099,
+        "n_elev_samples": 85,
+        "allocation_correct_rate": 1.0
+      },
+      "anomaly_region": {
+        "elevation_mae": 0.0098,
+        "n_elev_samples": 100,
+        "allocation_correct_rate": 0.0
+      },
+      "object": {
+        "detected": true,
+        "occ_cell_count": 4
+      },
+      "overhead": {
+        "build_ms": 15.106,
+        "cell_count": 1621
+      }
+    },
+    "C": {
+      "overall": {
+        "elevation_mae": 0.0073,
+        "n_elev_samples": 4298,
+        "allocation_correct_rate": 0.5463
+      },
+      "critical_region": {
+        "elevation_mae": 0.0099,
+        "n_elev_samples": 85,
+        "allocation_correct_rate": 1.0
+      },
+      "anomaly_region": {
+        "elevation_mae": 0.0423,
+        "n_elev_samples": 95,
+        "allocation_correct_rate": 0.88
+      },
+      "object": {
+        "detected": true,
+        "occ_cell_count": 4
+      },
+      "overhead": {
+        "build_ms": 19.585,
+        "cell_count": 1716
+      }
+    }
+  },
+  "resolution_efficiency": {
+    "B_extra_fine_cells_over_A": 89,
+    "B_extra_cells_on_important_content": 1.0,
+    "C_extra_fine_cells_over_B": 104,
+    "C_extra_cells_on_important_content": 0.7981
+  },
+  "distance_uncertainty_correlation_normal_map": -0.197,
+  "n_uncertain_coarse_cells_flagged": 21
+}

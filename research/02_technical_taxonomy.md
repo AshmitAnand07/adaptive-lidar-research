@@ -1,136 +1,191 @@
 # 02 — Technical Taxonomy
 
-Status: Built from Phase 1 (8 supplied papers) + Phase 2 (~104 external
-papers). This is a synthesis document — it organizes what has been found
-along the dimensions CLAUDE.md specifies, so gaps and competing approaches
-(Phases 4-5) can be identified from evidence rather than assumption. **No
-architecture is selected or recommended here.**
+Status: Synthesis checkpoint. Built entirely from research already completed
+— Phase 1 (8 supplied papers, `research/papers/*.md`) and Phase 2 (~104
+external papers, `external_literature/group_{a..e}_*.md` and
+`external_literature/00_inventory.md`). **No new literature search was
+performed for this update.** No architecture is selected or recommended.
 
-Sources: `../evidence/citations.md`, `../research/papers/*.md` (supplied),
-`../external_literature/00_inventory.md` and `group_{a..e}_*.md` (external).
+This supersedes the shorter Phase-2-only taxonomy previously in this file;
+that content is preserved and expanded below along the 9 axes requested for
+this checkpoint. Evidence levels (DIRECT EVIDENCE / DERIVED / INFERENCE /
+HYPOTHESIS / WEB VERIFIED) follow each paper's own analysis file — this
+document does not re-assert a paper's technical claims without that backing.
 
 ---
 
-## Axis 1 — The Six Adaptive-Mechanism Categories
+## Axis 1 — Spatial Representation
 
-CLAUDE.md and this project's Phase 2 briefs require distinguishing six
-mechanisms that the word "adaptive" gets applied to indiscriminately in the
-literature. This axis is the single most important finding-organizer from
-Phase 2.
-
-| Category | Definition | Example papers (supplied + external) |
+| Representation | Supplied papers | External papers (representative) |
 |---|---|---|
-| **Adaptive sensor acquisition** | The physical sensor/scan pattern itself changes | αLiDAR (supplied #3, pure example); Adaptive Fovea (Tasneem 2020); MEMS-based Adaptive LiDAR (Pittaluga 2020); Stache et al. UAV (2021/22, altitude change) |
-| **Adaptive sensing** (broader) | Sensing-side adaptivity not limited to scan pattern | Space-variant/active vision survey (2023) |
-| **Adaptive neural computation** | A network's compute graph/inference cost adapts per input | Ada3D; Focal Sparse Conv; SPS-Conv; Agile3D; MURAL; Mixture-of-Experts edge detection |
-| **Adaptive attention/ROI** | Learned/rule-based attention reallocates processing effort | FOVEA; PointSplit; Fast Attention-Based Simplification; HOTFormerLoc (partial) |
-| **Adaptive computational representation** | Internal data structure adapts (e.g. sparse tensors), independent of a persistent map | Nearly all of Group E (SECOND, Minkowski Engine, SPVNAS, Spira, SD-Conv); AVS-Net; DFPS |
-| **Adaptive map resolution** | The **persistent** map/grid/voxel structure has spatially varying resolution | Variable-resolution NDT (supplied #7); Adaptive-LIO; VoxelMap; D-Map; wavemap; OctoMap; MAP-ADAPT; Larsson et al.; RoadRunner M&M; Funk et al.; **MrHash** (cleanest example in the whole search); AdaOcc (partial) |
+| **2D** (no height) | — | Elfes occupancy grids; DOGMa lineage (Nuss, Danescu, Schreiber, Jang); MotionNet; Kraetzschmar quadtree; Stache et al. UAV (flat field) |
+| **2.5D** (height/elevation per 2D cell) | STM (#1), Graph SLAM mapping (#4), motion grids (#5), evidential grids (#6), lightweight SLAM (#8) — 5 of 8 | MEM; RoadRunner; **RoadRunner M&M**; Fankhauser elevation mapping; Multi-Res. Elevation Mapping (Planetary Rotorcraft); Adaptive Patched Grid Mapping; PointPillars' pillar pseudo-image (height folded into learned feature) |
+| **3D** (unrestricted) | Metric-semantic mapping (#2), αLiDAR (#3), Variable-Resolution NDT (#7) — 3 of 8 | VoxelNet, SECOND, MinkowskiEngine base; SSMI; Larsson et al.; OctoMap; wavemap; Adaptive-LIO; VoxelMap; D-Map; MrHash |
+| **Mesh** | STM (triangular surface mesh) | Metric-semantic mapping's marching-cubes-extracted mesh (supplied #2, listed here for representation type though counted as 3D above) |
+| **NDT (Normal Distributions Transform)** | Variable-Resolution NDT (#7) | — (no external NDT-specific paper found; VoxelMap uses plane/edge features, a related but distinct geometric-primitive map) |
+| **BEV / pseudo-image** | — | PointPillars, MotionNet, SegNet4D, dynamic OGM w/ BEVFusion, MURAL, Agile3D |
+| **Range image** | — | LMNet (spherical projection) |
+| **Cylindrical / polar** | — | Cylinder3D (cylindrical voxel binning) |
+| **Octree / quadtree** | — (Variable-Resolution NDT uses an Octree for indexing, but the *resolution policy* is curvature-driven point-density capping, not tree-depth adaptivity per se) | OctoMap; A-OctoMap; SSMI; Larsson et al.; Langerwisch & Wagner; Kraetzschmar; Funk et al.; wavemap (wavelet-hierarchical, octree-adjacent) |
+| **Sparse voxel hash** | — | Voxel Hashing (Nießner 2013); Spatio-Temporal Voxel Layer; MrHash |
 
-**Key finding**: the category that matters most for the SIH problem
-("adaptive spatial representation") is the last one, **adaptive map
-resolution** — and it is real but comparatively rare. Across the entire
-Phase 2 search (~104 papers), fewer than 15 papers are genuine, persistent,
-spatially-varying-resolution *maps*; the great majority of "adaptive LiDAR"
-literature is either sensing-side or transient per-inference computation
-(sparsity, attention, conditional compute) that never persists as a map.
+**Observation**: the supplied set is 2.5D-heavy (5/8) with no full-3D-vs-2.5D
+consensus; the external set spans every representation family with roughly
+even weight, and includes representation types (cylindrical/polar, sparse
+hash) entirely absent from the supplied set.
 
-## Axis 2 — Resolution Drivers (what decides where resolution is finer/coarser)
+## Axis 2 — Resolution / Adaptation Driver
 
-| Driver | Example papers | Notes |
+| Driver | Supplied | External (representative) |
 |---|---|---|
-| **Distance from sensor/robot** | Adaptive-LIO; RoadRunner M&M (2 fixed tiers); range-based density optimization; Cylinder3D (implicit, via coordinate system) | The SIH problem statement's own example. Well-precedented (disproves H1) but several papers (PointPillars' own limitation, the embedded voxel-efficiency paper) show distance-only coarsening is exactly where small/distant objects get lost. |
-| **Geometric complexity / curvature** | Variable-resolution NDT (supplied #7, curvature-driven); VoxelMap (plane/edge-driven) | Ignores semantics — a flat but important sign gets the same treatment as a flat unimportant wall. |
-| **Occupancy homogeneity** | OctoMap; SSMI; A-OctoMap | The oldest, most classic driver (OctoMap 2013). |
-| **Semantic class** | **Larsson et al. (2022)** — the clearest, most direct example; Stache et al. (2021/22, via altitude); MAP-ADAPT; TSDF Adaptive-Res. paper | Directly disproves H3 as a general claim; gap is the *combination* with 2.5D + ground-vehicle setting (see Axis 4). |
-| **Uncertainty / variance** | **MrHash** (SDF variance); Langerwisch & Wagner (sensor error bounds); Variable-Resolution Virtual Maps USV (SLAM uncertainty) | MrHash is the strongest evidence that a non-distance, non-semantic criterion can outperform fixed resolution by a wide, measured margin. |
-| **Sensing density / pixel footprint** | Multi-Resolution Elevation Mapping, Planetary Rotorcraft | Continuous analog of the distance-tier idea, driven by per-measurement geometry rather than a discrete rule. |
-| **System load / latency deadline** | Agile3D; MURAL | A driver the SIH problem statement does not mention at all — resolution adapted to available compute/contention, not to the scene. Time-varying, not spatially-varying (MURAL is explicitly uniform-per-frame). |
-| **Task/planning-horizon request** | Adaptive Patched Grid Mapping | Resolution driven by what a downstream consumer (planner) asks for, not sensor geometry or scene content. |
-| **Fixed / none** | The large majority: 6 of 8 supplied papers; ROG-Map; G-VOM; MEM; RoadRunner; nearly all of Groups D and E | Still the empirical default even in recent (2024-2025), competitive, published systems. |
+| **Fixed (no adaptation)** | 6 of 8 (all except Variable-Res. NDT #7, which is curvature-driven) | Majority of both Group C (terrain/semantic mapping) and Group D (dynamic perception) — this remains the empirical default even in 2024-2025 systems |
+| **Distance-based** | — | **Adaptive-LIO**; **RoadRunner M&M** (2 discrete tiers); range-based point-cloud density optimization; Cylinder3D (implicit, via coordinate system) |
+| **Curvature / geometry-based** | Variable-Resolution NDT (#7) | VoxelMap (plane/edge); OctNet (occupancy geometry) |
+| **Semantic-based** | — | **Larsson et al.** (explicit class-weighted objective); Stache et al. (UAV altitude tied to class-pixel ratio); MAP-ADAPT (semantic+geometry); TSDF Adaptive-Res. paper |
+| **Uncertainty/variance-based** | — | **MrHash** (SDF variance); Langerwisch & Wagner (sensor-error bounds); Variable-Resolution Virtual Maps USV (SLAM uncertainty) |
+| **Object-based (ROI around detected objects)** | — | AdaOcc (fine detail in object-centric ROIs) |
+| **Risk-based** | — | None found where *risk* (as opposed to uncertainty) drives *resolution* — RAMP/STEP/EVORA/RiskMap all use risk to shape planning/cost, not cell size (see Axis 5 note) |
+| **System-load / deadline-based** | — | **MURAL** (deadline-driven, temporally not spatially adaptive); Agile3D (contention+content jointly) |
+| **Learned (importance/attention)** | — | Focal Sparse Conv; SD-Conv; PointSplit; FOVEA; Fast Attention-Based Simplification |
+| **Hybrid / multi-driver** | — | MAP-ADAPT (semantic + geometric complexity + available compute — the most multi-driver example found); Agile3D (content + system contention) |
 
-**Key finding**: at least seven structurally distinct resolution drivers have
-independent published precedent. No paper found combines more than two of
-them (e.g., MAP-ADAPT combines semantic + geometric complexity; RoadRunner
-M&M's tiers are distance-only). A resolution policy that deliberately
-combines drivers (e.g., distance as a coarse prior, refined by semantic
-importance and local uncertainty) was **not found in the literature
-searched** — this is a candidate gap for Phase 4, not yet a confirmed one.
+**Observation**: at least 8 structurally distinct drivers have independent
+published precedent (up from the 6 the SIH problem statement anticipates).
+No paper combines more than 2-3 drivers; a policy combining distance (coarse
+prior) with semantic/uncertainty refinement was not identified in the
+literature searched.
 
-## Axis 3 — Representation Type × Resolution Adaptivity
+## Axis 3 — Perception
 
-|  | **Fixed resolution** | **Adaptive resolution** |
+| Type | Supplied | External (representative) |
 |---|---|---|
-| **2D** (no height) | Elfes occupancy grids; most DOGMa lineage (Nuss, Schreiber, Jang); BEV detectors (PointPillars, MotionNet) | Kraetzschmar quadtree (2004); Stache et al. UAV (semantic-driven, flat field only) |
-| **2.5D** (height/elevation per cell) | 6 of 8 supplied papers (STM, Graph SLAM ×2, motion grids, evidential grids, lightweight SLAM); MEM; RoadRunner; Fankhauser elevation mapping | **RoadRunner M&M** (distance-tier); Multi-Res. Elevation Mapping Planetary Rotorcraft (measurement-density); Adaptive Patched Grid Mapping (request-driven, multi-layer) |
-| **3D** (unrestricted) | VoxelNet; most sparse-conv lineage (SECOND, MinkowskiEngine base); metric-semantic mapping (supplied #2); αLiDAR (supplied #3) | Variable-resolution NDT (supplied #7, curvature); Adaptive-LIO; VoxelMap; D-Map; OctoMap; wavemap; Larsson et al.; SSMI; **MrHash** |
+| **Classical / geometric** | 7 of 8 (all except metric-semantic mapping #2) | OctoMap, wavemap, VoxelMap, D-Map, Funk et al., MrHash, Voxel Hashing, G-VOM, RAMP, STEP, Elfes occupancy grids |
+| **Semantic segmentation (learned)** | Metric-semantic mapping (#2) only | MEM, RoadRunner (training-time only), MAP-ADAPT, Larsson et al., SSMI, Terrain-Aware Semantic Mapping (subterranean), SegNet4D, Cylinder3D |
+| **Object detection (learned)** | — | VoxelNet, SECOND, PointPillars, SPVNAS, FSD, Focal Sparse Conv, SPS-Conv, Agile3D, MURAL, AdaOcc, Mixture-of-Experts edge detection |
+| **Terrain / traversability** | STM (#1, roughness modeling), metric-semantic mapping (#2, central) | RoadRunner, RoadRunner M&M, G-VOM, Terrain-Aware Semantic Mapping, RAMP, EVORA, STEP, Watch Your STEPP, Wellington & Stentz, Multi-Res. Elevation Mapping (Planetary Rotorcraft) |
+| **Dynamic-object perception** | Motion grids (#5), evidential grids (#6) — dedicated but offline/qualitative | LMNet, 4DMOS, MambaMOS, SegNet4D (MOS lineage); PointPWC-Net, SeFlow, Flow4D, SemanticFlow (scene-flow lineage); Nuss/Danescu/Schreiber (DOGMa lineage); MotionNet; DynORecon |
 
-**Key finding — directly relevant to the SIH's "2.5D" framing**: the 2.5D ×
-adaptive-resolution cell is populated (RoadRunner M&M, planetary rotorcraft
-mapping, Adaptive Patched Grid Mapping), so 2.5D adaptive-resolution mapping
-is **not itself novel** (this weakens any claim that the SIH's basic framing
-is new). What is genuinely sparse across the entire search is the 2.5D ×
-adaptive-resolution × **semantic-driven** intersection specifically — every
-paper in the 2.5D-adaptive cell above uses a geometric driver (distance or
-measurement density), never semantics. This is the most precise, evidence-
-grounded statement of where a real (if narrow) gap sits.
+**Observation**: the supplied set has essentially one learned-perception
+example (metric-semantic mapping) against seven classical methods; the
+external set is dominated by learned methods across every perception type.
+Dynamic-object perception is the one capability with a large, mature,
+independent external literature (MOS + scene-flow + DOGMa lineages) that was
+almost entirely absent from the supplied set's actual demonstrated
+capability (motion grids and evidential grids are dedicated DATMO papers but
+both offline/qualitative-only).
 
-## Axis 4 — Perception Capability Coverage
+## Axis 4 — Temporal / Dynamic Handling
 
-This axis checks which papers combine resolution adaptivity (any kind) with
-each of the SIH's three core sub-problems.
-
-| Combination | Found? | Strongest example(s) |
+| Mechanism | Supplied | External (representative) |
 |---|---|---|
-| Adaptive resolution + terrain analysis | **Yes** | RoadRunner M&M (distance-tier + CVaR traversability); Multi-Res. Elevation Mapping Planetary Rotorcraft (measurement-density + landing-site safety) |
-| Adaptive resolution + semantic perception | **Yes** | Larsson et al. (class-weighted octree pruning); MAP-ADAPT; Stache et al. |
-| Adaptive resolution + static-object perception | **Yes, incidentally** | AdaOcc (object-centric ROI detail); most octree/voxel mapping implicitly supports downstream static perception |
-| Adaptive resolution + dynamic-object perception | **No clean example** | AdaOcc (resolution adaptive, dynamic-object tie unconfirmed) and MURAL (dynamic-object tie confirmed via downstream tracker, but resolution adaptation is temporal/uniform, not spatial) are the two closest near-misses — see H2 verdict in `../evidence/claims.md` |
-| Adaptive resolution + uncertainty-driven policy | **Yes** | MrHash (SDF variance); Langerwisch & Wagner (sensor-error bounds); Variable-Resolution Virtual Maps USV (SLAM uncertainty) |
-| 2.5D + semantic + terrain (any resolution) | **Yes, fixed-resolution only** | MEM (semantic 2.5D, fixed); RoadRunner (semantic-informed training, fixed 2.5D runtime map) |
-| 2.5D + adaptive resolution + semantic (all three) | **Not found in the literature searched** | Nearest analogues: RoadRunner M&M (2.5D+adaptive, no semantics) and Larsson et al. (adaptive+semantic, not 2.5D) — see H4 in `../evidence/claims.md` |
-| Real-time, embedded-hardware-validated adaptive resolution | **Yes, but conditional** | Agile3D (Jetson Orin/Xavier); MrHash (GPU); DFPS (CPU, but overhead caveat); FALO shows the *opposite* result is also real (sparse losing to dense on real edge silicon) |
+| Incremental frame-to-map/frame-to-frame fusion (no explicit dynamics model) | STM, Graph SLAM mapping, metric-semantic mapping, Variable-Res. NDT, lightweight SLAM — the majority | OctoMap, wavemap, VoxelMap, D-Map, Funk et al. |
+| Kalman/particle-filter object tracking | Motion grids (#5) | Nuss/Danescu DOGMa lineage, DynORecon, MURAL's downstream tracker |
+| Recurrent/sequence-native learned temporal fusion | — | 4DMOS (sparse 4D conv, receding horizon), MambaMOS (state-space model), Flow4D (5-frame 4D voxel fusion), PointRNN |
+| Predictive/forecasting of future state | — | SOGMP/SOGMP++, "Learning Spatiotemporal OGMs for Lifelong Navigation" |
+| Evidential/belief-based temporal fusion | Evidential grids (#6) | EviLOG |
+| Offline post-hoc temporal refinement (not real-time) | Lightweight SLAM (#8) | — |
 
-## Axis 5 — Uncertainty Sub-Types (do not treat "uncertainty" as one thing)
+**Observation**: no supplied paper does learned sequence-native temporal
+fusion (4DMOS/MambaMOS/Flow4D-style); this entire sub-family exists only in
+the external literature.
 
-Phase 2 (Group B in particular) found "uncertainty" used for at least five
-mechanically distinct things across this literature. Any future architecture
-decision that claims to be "uncertainty-aware" must specify which of these it
-means:
+## Axis 5 — Uncertainty (five distinct sub-types found; do not treat as one thing)
 
-1. **Sensor/measurement noise** — Elfes-lineage occupancy grids, EviLOG.
-2. **Occupancy-state probability itself** — all classic Bayesian occupancy grids.
-3. **Semantic-classification confidence** — E2-BKI.
-4. **Model/epistemic confidence over predicted or extrapolated regions** — SOGMP's future-occupancy prediction, Uncertainty-driven Planner.
-5. **Registration/alignment-fit uncertainty** — Uncertainty-Aware VI-SLAM's submap alignment; the NDT probability-density mixture model in the supplied variable-resolution NDT paper (#7).
+1. **Sensor/measurement noise** — Elfes-lineage occupancy grids, EviLOG, Langerwisch & Wagner (bounded-error model). Supplied: implicit in Graph SLAM mapping's GNSS/INS-RTK error correction.
+2. **Occupancy-state probability itself** — all classic Bayesian occupancy grids, evidential grids (#6, supplied).
+3. **Semantic-classification confidence** — E2-BKI. No supplied-paper analogue (metric-semantic mapping #2 does not report calibrated semantic confidence).
+4. **Model/epistemic confidence over predicted/extrapolated regions** — SOGMP, Uncertainty-driven Planner. No supplied-paper analogue.
+5. **Registration/alignment-fit uncertainty** — Uncertainty-Aware VI-SLAM's submap alignment; **the supplied Variable-Resolution NDT paper's (#7) NDT probability-density mixture model is a direct instance of this type.**
+6. **Terrain-surface-shape uncertainty** — a sixth type, found in the supplied set: STM's (#1) Bayesian message-passing/loopy-BP inference over the mesh is a genuine, distinct uncertainty type not matching any of the five external-literature types above cleanly (closest to type 1, but modeling the *inferred surface* rather than raw sensor noise).
 
-A sixth, related but distinct concept — **risk** (a decision-theoretic
-property, e.g. CVaR tail-risk in STEP/EVORA/RAMP) — is frequently conflated
-with "uncertainty" in paper abstracts but is a property of *planning/decision
-consequences*, not of the *representation* itself (the CVaR-MPPI paper is the
-clearest illustration: genuinely risk-aware, with no spatial map at all).
+**Related, frequently conflated concept — risk**: a decision-theoretic
+property of planning consequences (CVaR tail-risk in STEP/EVORA/RAMP/
+CVaR-MPPI), not a property of the spatial representation itself. The
+clearest illustration is CVaR-MPPI, which is rigorously risk-aware with no
+spatial map at all.
 
-## Axis 6 — Consolidated Hypothesis Status (see `../evidence/claims.md` for full sourcing)
+## Axis 6 — Spatial Data Structures
 
-| Hypothesis | Verdict |
-|---|---|
-| H1 — distance-based adaptive resolution is largely unexplored | **Disproved** |
-| H2 — no work combines dynamic-object perception with adaptive resolution | **Weakened** (two near-misses, no clean counterexample) |
-| H3 — semantic-aware adaptive resolution is unexplored | **Disproved generally; weakened for the SIH's exact setting** |
-| H4 — 2.5D + adaptive resolution + semantic perception is a useful gap | **Weakened** (three-way combo not found; every pairwise combo exists) |
-| H5 — adaptive map resolution gives meaningful compute/memory benefit | **Weakened/refined** (real, but hardware- and scale-conditional, not automatic) |
-| H6 — adaptive LiDAR work mainly concerns sensing, not map representation | **Disproved**, with the refinement that "adaptive computational representation" (transient) vastly outnumbers genuine "adaptive map resolution" (persistent) within the non-sensing majority |
+| Structure | Supplied | External (representative) |
+|---|---|---|
+| Regular grid (uniform cells) | Graph SLAM mapping (2D intensity/elevation images), motion grids, evidential grids | Elfes grids, DOGMa lineage, PointPillars, MEM, RoadRunner |
+| Triangular mesh | STM | Metric-semantic mapping's marching-cubes mesh (supplied #2) |
+| Voxel grid (dense) | Metric-semantic mapping (TSDF), αLiDAR (implicit) | VoxelNet, G-VOM |
+| Voxel grid (sparse/hashed) | — | Voxel Hashing, MrHash, Spatio-Temporal Voxel Layer, SECOND, MinkowskiEngine |
+| Octree | Variable-Resolution NDT (indexing only) | OctoMap, A-OctoMap, SSMI, Larsson et al., Funk et al., HOTFormerLoc |
+| Quadtree | — | Kraetzschmar, Langerwisch & Wagner, Variable-Resolution Virtual Maps (USV) |
+| Wavelet-hierarchical | — | wavemap |
+| Continuous/non-parametric field | — | Gaussian Process Occupancy Maps, E2-BKI (kernel-based) |
+| Hybrid grid-of-octrees | — | OctNet |
+| Cylindrical partition | — | Cylinder3D |
 
-## What This Taxonomy Does Not Yet Do
+## Axis 7 — Computational Efficiency (measured, not theoretical, evidence only)
 
-This is Phase 2's taxonomy — built to organize findings and stress-test
-Phase 1's hypotheses. It does **not**:
+| Evidence pattern | Supplied | External (representative) |
+|---|---|---|
+| Explicit real-time claim with hardware, quantified | Metric-semantic mapping (<7ms/frame, GPU), αLiDAR (~37ms) | MEM (2.6-23.6ms), Agile3D (85-476ms Jetson), FSD (2.4x vs. dense at 200m), Flow4D (15.1 FPS RTX3090) |
+| Compute reduction reported but no accuracy/hardware caveat given | Variable-Resolution NDT (memory only, not compute) | SPADE (36-89% compute cut) |
+| **Direct evidence that FLOPs/cell reduction ≠ measured speedup** | — | SPVNAS (7.6x theoretical → 2.7x measured), FALO (sparse *losing* to dense on real edge silicon) |
+| No computational figures reported at all | STM, Graph SLAM mapping, motion grids, evidential grids | Majority of Group C/D papers (RoadRunner reports latency; most terrain/dynamic papers do not) |
 
-- Perform the formal gap analysis (Phase 4) — that requires explicitly
-  weighing which of the "not found" combinations above are worth pursuing
-  vs. worth explaining away.
-- Generate or compare competing solution architectures (Phase 5).
-- Recommend any representation, resolution policy, or method.
+## Axis 8 — Memory Efficiency (measured, not theoretical, evidence only)
 
-Next: Phase 3 (deepen this taxonomy if needed) and Phase 4 (gap analysis)
-per `01_research_plan.md`.
+| Evidence pattern | Supplied | External (representative) |
+|---|---|---|
+| Quantified memory reduction vs. a stated baseline | Variable-Resolution NDT (36-80% of baseline, 4 environments) | **MrHash (~4x reduction)**, RoadRunner M&M's own reduced footprint (not separately quantified from latency), SPADE (custom silicon) |
+| Quantified absolute memory footprint (not a reduction ratio) | Lightweight SLAM (130-133MB peak, embedded) | MEM (~1.6MB additional multi-modal layers) |
+| Qualitative "reduces memory" claim only | — | Adaptive Patched Grid Mapping, wavemap, MAP-ADAPT |
+| Memory-bound / explicit limitation | Metric-semantic mapping (GPU-memory-bound, explicit limitation) | — |
+
+## Axis 9 — Localization / SLAM Dependence
+
+| Pattern | Supplied | External (representative) |
+|---|---|---|
+| Paper performs its own localization/odometry (SLAM/LIO) | Graph SLAM mapping (Graph SLAM), Variable-Resolution NDT (scan-to-map NDT, no loop closure) | VoxelMap, Adaptive-LIO, D-Map (implicit), Funk et al. |
+| Paper depends on externally-supplied pose (GPS/IMU, no self-localization) | Motion grids, evidential grids (external GPS/IMU) | SSMI, Larsson et al. (exploration context, pose assumed) |
+| Paper's core contribution *is* localization/pose estimation | αLiDAR (pointwise-uncertainty-aware LIO) | Uncertainty-Aware VI-SLAM, SPAQ-DL-SLAM |
+| Localization not applicable / not addressed | STM (uses landmark-relative submaps + demo poses from ArUco/DGPS, not a general SLAM front-end) | RoadRunner/RoadRunner M&M (pose assumed from separate stack), MEM |
+| Metric-semantic mapping (#2) | Integrates with an external LiDAR-Visual-Inertial system; performs mapping given that pose | — |
+
+---
+
+## Cross-Cutting Finding: Resolution-Boundary Consistency (2026-09-06)
+
+A focused follow-up investigation (`resolution_boundary_consistency.md`)
+searched LiDAR/robotics-mapping literature, cross-domain literature (computer
+graphics terrain LOD, FEM/adaptive mesh refinement, multigrid, image
+processing), and semantic/object-perception-adjacent literature specifically
+for evidence on what happens at the transition between differently-resolved
+neighboring regions — a question that cuts across Axes 1, 2, 4, and 6 above
+rather than fitting cleanly into any single axis.
+
+Headline result: one 2.5D elevation-mapping paper (JPL planetary-rotorcraft
+landing-site detection, arXiv:2111.06271) explicitly names "artifacts...
+where resolution changes between neighboring cells" and judges them
+acceptable only for its own flat-terrain safety task; two robotics
+mapping/planning papers (Funk et al., arXiv:2010.07929; Schleich & Behnke,
+arXiv:2103.14607) engineered ad hoc mitigations without quantifying the
+underlying effect; a rigorously-named, structurally transferable candidate
+("2:1 balance constraint") exists in the FEM/AMR literature but has not been
+found imported into any robotics/LiDAR paper searched; and a directly
+adjacent representation (octree/sparse-voxel learned 3D perception) was
+found to require an explicit fix (interpolation-aware padding, ICCV 2021)
+because its naive default boundary handling was measurably insufficient.
+**This revises the prior classification of resolution-boundary consistency
+from "apparently underexplored" to "identified in isolated instances and
+engineered around ad hoc, but not rigorously measured for 2.5D LiDAR ground-
+vehicle perception specifically."** See `resolution_boundary_consistency.md`
+§11 for the full, category-by-category confidence breakdown and
+`evidence/claims.md` for the sourced claims.
+
+---
+
+## Next Steps
+
+This taxonomy feeds directly into `03_paper_vs_sih_matrix.md` (per-paper
+coverage of each SIH requirement and the resulting Gap Map) and
+`04_paper_vs_paper_matrix.md` (direct paper-to-paper comparison). See those
+files for the requirement-level state classification, intersection analysis,
+and the gap-survival assessment for the three candidate gaps flagged at the
+end of Phase 2. `resolution_boundary_consistency.md` holds the dedicated
+deep-dive on the single gap judged most interesting at that checkpoint.

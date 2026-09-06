@@ -55,6 +55,94 @@ detail lives in:
 Not duplicated here to avoid maintaining two copies of ~104 citations; this
 file remains the authoritative bibliography for the 9 **supplied** papers.
 
+## External Literature (Resolution-Boundary Consistency Investigation, 2026-09-06)
+
+A focused follow-up investigation searched LiDAR/robotics-mapping literature,
+cross-domain literature (computer graphics terrain LOD, FEM/adaptive mesh
+refinement, multigrid, image processing), and semantic/object-perception-
+adjacent literature for evidence on resolution-transition/boundary artifacts.
+~30 new sources were consulted (full citations, access levels, and per-source
+evidence tags in the table below). Not duplicated here in full per the same
+rationale as Phase 2; the authoritative source list is:
+
+- `../research/resolution_boundary_consistency.md` §2a (LiDAR/robotics-native
+  evidence — 12 sources), §2b (cross-domain evidence — 9 sources), §2c
+  (semantic/object-perception-adjacent evidence — 9 sources)
+
+Key new citations (full detail in the file above): Schoppmann et al., IROS
+2021, arXiv:2111.06271 (JPL planetary-rotorcraft elevation mapping); Funk et
+al., ICRA 2021/RA-L, arXiv:2010.07929; Schleich & Behnke, ICRA 2021,
+arXiv:2103.14607; "Reduced Complexity Multi-Scale Path-Planning on
+Probabilistic Maps," arXiv:1602.04800; Nguyen et al. 2026, arXiv:2603.22667;
+Yang et al., "Interpolation-Aware Padding," ICCV 2021, arXiv:2108.06925;
+Reina et al., Frontiers in Neuroscience 2020, PMC7020775; "Group Evidence
+Matters," arXiv:2509.10779; SWITi, arXiv:2607.18990; geometry clipmaps
+(Losasso & Hoppe 2004), ROAM (Duchaineau et al. 1997), geomipmapping (de Boer
+2000); FEM/AMR 2:1-balance and hanging-node lineage (Sundar, Sampath, Biros;
+deal.II documentation); Briggs/Henson/McCormick, "A Multigrid Tutorial."
+
+## Resolution-Boundary Consistency Feasibility Experiment (2026-09-06)
+
+Not an external citation — a reproducibility record for this project's own
+synthetic experiment (see `../research/resolution_boundary_consistency.md`
+§9 for the full design and results). Source of record:
+
+- `../experiments/resolution_boundary_experiment.py` — full experiment code
+  (pure Python stdlib, no external dependencies), documented sensor-model
+  and world-generation simplifications inline
+- `../experiments/results/resolution_boundary_experiment_results.json` —
+  complete raw numeric output for all 7 swept configurations, every metric
+
+Any claim drawn from this experiment elsewhere in this project should be
+tagged **DIRECT EVIDENCE — this project's own synthetic experiment**, kept
+explicitly distinct from DIRECT EVIDENCE sourced from published external
+papers, since it uses no real LiDAR data and no external dataset.
+
+## Candidate Solution Analysis (2026-09-06)
+
+Targeted new research for `../research/05_candidate_solution_analysis.md`,
+distinct from the broad Phase 2 sweep. Full citations and evidence levels
+in that file, §1.4 and §1.10. Key new sources: AdaOcc full text
+(arXiv:2408.13454, via `arxiv.org/html/2408.13454`); WACV 2025 point
+selection (arXiv:2508.01980); foreground-modulation paper (arXiv:2604.05780);
+S3PM (MDPI Sensors 2026, PMC12845740); Dynamic Lambda-Field
+(arXiv:2103.04795); MR3D-Net (arXiv:2408.06137); Patchwork++
+(arXiv:2207.11919); ground-segmentation survey (arXiv:2312.16839); RobMOT
+(arXiv:2405.11536); Spb3DTracker (arXiv:2408.05940); EG-PointPillar
+(ScienceDirect, search-verified). One sub-search (driver-count ablations,
+persistent-vs-transient trade-offs) was interrupted by a platform rate
+limit and did not complete — reported as incomplete in
+`05_candidate_solution_analysis.md` §6, not backfilled with a guess.
+
+## Architecture-Selection Evidence Checkpoint (2026-09-06)
+
+Not an external citation — a reproducibility record for this project's own
+driver-count-ablation experiment (see
+`../research/05_candidate_solution_analysis.md` §11 for design and results).
+
+- `../experiments/driver_ablation_experiment.py` — full experiment code
+  (pure Python stdlib, no dependencies)
+- `../experiments/results/driver_ablation_results.json` — complete raw
+  numeric output
+
+Part 3 (classical vs. learned static-object perception) drew only on
+sources already cited under "Candidate Solution Analysis (2026-09-06)"
+above — no new external sources for this checkpoint.
+
+## Semantic-Resolution Temporal-Stability Checkpoint (2026-09-06)
+
+Not an external citation — a reproducibility record for this project's own
+semantic-noise-stability experiment (see
+`../research/05_candidate_solution_analysis.md` §12). No new external
+sources; the noise-rate calibration reuses LVCA-Net's accuracy figure
+already cited under "Candidate Solution Analysis (2026-09-06)" above.
+
+- `../experiments/semantic_noise_stability_experiment.py` — full experiment
+  code (imports `driver_ablation_experiment.py` directly rather than
+  duplicating the world/sensor model)
+- `../experiments/results/semantic_noise_stability_results.json` —
+  complete raw numeric output, all policies and both noise levels
+
 ## Format for future entries
 
 As further external literature is added in later phases, append rows to

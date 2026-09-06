@@ -1,0 +1,135 @@
+{
+  "n_frames": 30,
+  "n_candidate_coarse_cells": 360,
+  "n_true_critical_coarse_cells": 6,
+  "results": {
+    "A_distance_only": {
+      "mean_fine_cell_count": 1543.0,
+      "std_fine_cell_count": 0.0,
+      "min_max_fine_cell_count": [
+        1543,
+        1543
+      ],
+      "total_tier_flips": 0,
+      "flips_per_transition_per_candidate_cell": 0.0,
+      "critical_region_correct_frame_fraction": 0.0,
+      "pole_region_correct_frame_fraction": 0.0,
+      "mean_false_positive_fraction_of_normal_cells": 0.0,
+      "first_frame_critical_region_fine": null,
+      "first_frame_pole_fine": null,
+      "mean_build_ms": 10.293
+    },
+    "B_perfect_semantic": {
+      "mean_fine_cell_count": 1617.0,
+      "std_fine_cell_count": 0.0,
+      "min_max_fine_cell_count": [
+        1617,
+        1617
+      ],
+      "total_tier_flips": 0,
+      "flips_per_transition_per_candidate_cell": 0.0,
+      "critical_region_correct_frame_fraction": 1.0,
+      "pole_region_correct_frame_fraction": 1.0,
+      "mean_false_positive_fraction_of_normal_cells": 0.0,
+      "first_frame_critical_region_fine": 0,
+      "first_frame_pole_fine": 0,
+      "mean_build_ms": 10.269
+    },
+    "C_raw_realistic_p0.90": {
+      "mean_fine_cell_count": 2009.87,
+      "std_fine_cell_count": 70.51,
+      "min_max_fine_cell_count": [
+        1882,
+        2137
+      ],
+      "total_tier_flips": 1852,
+      "flips_per_transition_per_candidate_cell": 0.1774,
+      "critical_region_correct_frame_fraction": 0.5333,
+      "pole_region_correct_frame_fraction": 0.9333,
+      "mean_false_positive_fraction_of_normal_cells": 0.0975,
+      "first_frame_critical_region_fine": 1,
+      "first_frame_pole_fine": 0,
+      "mean_build_ms": 10.661
+    },
+    "C_hyst_k3_realistic_p0.90": {
+      "mean_fine_cell_count": 1625.97,
+      "std_fine_cell_count": 27.69,
+      "min_max_fine_cell_count": [
+        1543,
+        1656
+      ],
+      "total_tier_flips": 24,
+      "flips_per_transition_per_candidate_cell": 0.0023,
+      "critical_region_correct_frame_fraction": 0.8333,
+      "pole_region_correct_frame_fraction": 0.9333,
+      "mean_false_positive_fraction_of_normal_cells": 0.0037,
+      "first_frame_critical_region_fine": 5,
+      "first_frame_pole_fine": 2,
+      "mean_build_ms": 11.272
+    },
+    "C_hyst_k5_realistic_p0.90": {
+      "mean_fine_cell_count": 1604.1,
+      "std_fine_cell_count": 24.99,
+      "min_max_fine_cell_count": [
+        1543,
+        1617
+      ],
+      "total_tier_flips": 6,
+      "flips_per_transition_per_candidate_cell": 0.0006,
+      "critical_region_correct_frame_fraction": 0.7,
+      "pole_region_correct_frame_fraction": 0.8667,
+      "mean_false_positive_fraction_of_normal_cells": 0.0,
+      "first_frame_critical_region_fine": 9,
+      "first_frame_pole_fine": 4,
+      "mean_build_ms": 11.657
+    },
+    "C_raw_optimistic_p0.95": {
+      "mean_fine_cell_count": 1818.3,
+      "std_fine_cell_count": 55.34,
+      "min_max_fine_cell_count": [
+        1721,
+        1931
+      ],
+      "total_tier_flips": 999,
+      "flips_per_transition_per_candidate_cell": 0.0957,
+      "critical_region_correct_frame_fraction": 0.7,
+      "pole_region_correct_frame_fraction": 0.9667,
+      "mean_false_positive_fraction_of_normal_cells": 0.05,
+      "first_frame_critical_region_fine": 1,
+      "first_frame_pole_fine": 0,
+      "mean_build_ms": 10.629
+    },
+    "C_hyst_k3_optimistic_p0.95": {
+      "mean_fine_cell_count": 1614.4,
+      "std_fine_cell_count": 20.57,
+      "min_max_fine_cell_count": [
+        1543,
+        1644
+      ],
+      "total_tier_flips": 10,
+      "flips_per_transition_per_candidate_cell": 0.001,
+      "critical_region_correct_frame_fraction": 0.9,
+      "pole_region_correct_frame_fraction": 0.9333,
+      "mean_false_positive_fraction_of_normal_cells": 0.0006,
+      "first_frame_critical_region_fine": 3,
+      "first_frame_pole_fine": 2,
+      "mean_build_ms": 14.874
+    },
+    "C_hyst_k5_optimistic_p0.95": {
+      "mean_fine_cell_count": 1605.3,
+      "std_fine_cell_count": 24.77,
+      "min_max_fine_cell_count": [
+        1543,
+        1617
+      ],
+      "total_tier_flips": 6,
+      "flips_per_transition_per_candidate_cell": 0.0006,
+      "critical_region_correct_frame_fraction": 0.7,
+      "pole_region_correct_frame_fraction": 0.8667,
+      "mean_false_positive_fraction_of_normal_cells": 0.0,
+      "first_frame_critical_region_fine": 9,
+      "first_frame_pole_fine": 4,
+      "mean_build_ms": 11.969
+    }
+  }
+}
